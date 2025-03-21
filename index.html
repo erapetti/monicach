@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>Mónica Caffa - Candidata a Alcaldesa del Municipio CH</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Mónica Caffa es candidata a alcaldesa del Municipio CH de Montevideo por el Frente Amplio">
+    <meta name="keywords" content="Municipio CH, Montevideo, Frente Amplio, Uruguay">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="imagenes/icono.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/cb62db2728.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+.bg-verde {
+  background-color: #00C972;
+  color: #fff
+}
+
+.bg-rojo {
+  background-color: #ED1A25;
+  color: #fff
+}
+
+.bg-azul {
+  background-color: #003C69;
+  color: #fff
+}
+
+.bg-celeste {
+  background-color: #1B7EDB;
+  color: #fff
+}
+
+.bg-blanco {
+  background-color: #FFFFFF;
+  color: #444;
+}
+
+.bg-gris {
+  background-color: #eee;
+  color: #444;
+}
+
+.verde {
+  color: #00C972
+}
+
+.rojo {
+  color: #ED1A25
+}
+
+.azul, .azul a {
+  color: #003C69;
+}
+
+.blanco, .blanco a {
+  color: #fff;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+section {
+   padding: 3rem 1em;
+}
+
+h1 {
+   padding-bottom: 2rem;
+}
+
+.logoch {
+   height: 4rem;
+}
+
+header.portada {
+   padding-top: 7rem;
+   background-color: #e8f3e5;
+}
+
+body {
+   font-family: Montserrat;
+}
+
+html {
+   scroll-padding-top: 6.6rem;
+}
+
+@media (min-width: 768px) {
+  .max-w-md {
+    max-width: 768px !important;
+  }
+}
+
+@media (min-width: 992px) {
+}
+
+@media (min-width: 1200px) {
+  .col-xl-20 {
+    flex: 0 0 auto;
+    width: 20%;
+  }
+  .fs-xl-5 {
+    font-size: 1.25rem !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  .fs-xxl-4 {
+    font-size: 1.5rem !important;
+  }
+}
+
+.eventDescription {
+	display: block;
+}
+/* popup */
+        /* Fullscreen overlay */
+        .play-overlay {
+            display: flex;
+            background-color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+            background-image: url("videos/video1.png");
+            background-repeat: no-repeat;
+            background-position: center; 
+            text-align: center;
+            height: calc(100vh - 12rem);
+            background-size: auto 80%;
+            position: relative;
+	    
+        }
+
+        /* Play button */
+        .play-button {
+            font-size: 80px;
+            color: #00C972;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+        }
+
+       .play-more {
+            bottom: 0;
+            position: absolute;
+       }
+
+        /* Video container */
+        .video-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 6.6rem;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1001;
+        }
+
+        /* Close button */
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+        }
+
+        .close-button i {
+            font-size: 30px;
+        }
+
+        /* Video */
+        video {
+            /* width: 90vw; */
+            height: calc(100vh - 1.2rem);
+        }
+/* popup */
+
+    </style>
+    <script>
+<!-- agenda -->
+var agenda = [];
+
+function loadEvents() {
+    return fetch("/events.json")
+        .then(response => response.json())
+        .then(data => {
+            agenda = data; // sets var agenda
+        });
+}
+
+// Call the function to populate agenda
+loadEvents().then(() => {
+    var agendaContainer = document.getElementById("agenda-container");
+    if (agendaContainer) {
+        agendaContainer.innerHTML = generateAgendaHTML(agenda);
+    }
+});
+
+function generateAgendaHTML(agenda) {
+    let html = "";
+    let currentDia = "";
+
+    agenda.forEach((item, index) => {
+        if (item.dia !== currentDia) {
+            if (currentDia !== "") {
+                html += template_footer; // Close previous day's section
+            }
+            currentDia = item.dia;
+            html += template_header.replace("<%dia%>", item.dia);
+        }
+        
+        let row = template_row
+            .replace("<%hora%>", item.hora)
+            .replace("<%actividad%>", item.actividad)
+            .replace("<%descripcion%>", item.descripcion)
+            .replace("<%lugar%>", item.lugar);
+        
+        html += row;
+    });
+    
+    html += template_footer; // Close the last day's section
+    
+    return html;
+}
+
+var template_header = `
+        <div class="d-grid pb-5 gap-3 bg-blanco">
+          <div class="row">
+            <div class="p-2 col-6 bg-rojo fs-3"><%dia%></div>
+          </div>
+`;
+var template_row = `
+          <div class="row">
+            <div class="p-2 col-1 bg-blanco gap-3 d-none d-sm-block"></div>
+            <div class="p-2 col-4 col-sm-2 bg-azul gap-3 d-flex align-items-center m-1 m-sm-0"><span class="w-100"><%hora%></span></div>
+            <div class="container col-8 m-0 p-0 d-sm-flex">
+              <div class="p-2 col-12 col-sm-6 gap-3 d-flex align-items-center text-start"><span class="w-100"><span class="fs-4 fw-bold"><%actividad%></span><span class="eventDescription"><%descripcion%></span></div>
+              <div class="p-2 col-12 col-sm-6 gap-3 d-flex align-items-center text-start"><span class="w-100"><i class="fa-solid fa-location-dot"></i> <%lugar%></span></div>
+            </div>
+            <div class="p-2 col-1 bg-blanco gap-3 d-none d-sm-block"></div>
+          </div>
+`;
+var template_footer = `
+        </div>
+`;
+<!-- agenda -->
+
+function goTo(id) {
+	const element = document.getElementById(id);
+	if (element) {
+		const topPos = element.getBoundingClientRect().top + window.pageYOffset;
+
+		window.scrollTo({
+		  top: topPos, // scroll so that the element is at the top of the view
+		  behavior: 'smooth' // smooth scroll
+		});
+	}
+        return false;
+}
+
+    </script>
+
+  </head>
+  <body>
+
+    <!-- navbar -->
+    <navbar class="navbar bg-verde sticky-top py-3">
+      <div class="container">
+        <a class='navbar-brand' href='/'>
+          <img src="imagenes/logoch.png" alt="Logo CH" class="img-fluid logoch">
+        </a>
+        <div class="display-6 azul">
+          <a href="https://wa.me/59899899307" aria-label="whatsapp" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="https://www.instagram.com/monicaffach" aria-label="instagram" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.facebook.com/profile.php?id=61573116275359" aria-label="facebook" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://x.com/monicaffach" aria-label="x" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="https://www.tiktok.com/@monicaffach" aria-label="tiktok" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+	  <a href="mailto:monicaffach@gmail.com" aria-label="e-mail" target="_blank"><i class="fa-regular fa-envelope"></i></a>
+        </div>
+      </div>
+    </navbar>
+    <!-- navbar -->
+
+    <!-- Play Button Overlay -->
+    <div id="playOverlay" class="play-overlay">
+        <i class="fa-solid fa-circle-play play-button" onclick="showVideo()"></i>
+        <i class="fa-solid fa-chevron-down play-button play-more" onclick="goTo('inicio')"></i>
+    </div>
+
+    <!-- Video Popup -->
+    <div id="videoContainer" class="video-container">
+        <video id="videoPlayer" src="/videos/video1.mp4" controls preload="auto"></video>
+        <div class="close-button" onclick="closeVideo()">
+            <span>Cerrar</span>
+            <i class="fa-solid fa-circle-xmark"></i>
+        </div>
+    </div>
+
+    <a name="inicio" id="inicio"></a>
+
+    <!-- PORTADA -->
+    <header class="portada text-center">
+      <img src="imagenes/jumbo.png" class="img-fluid max-w-md" alt="Mónica Caffa">
+    </header>
+    <!-- PORTADA -->
+
+    <!-- sobre mi -->
+    <section class="" id="about">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4">
+            <img src="imagenes/monialch.jpg" class="img-fluid" alt="Mónica Caffa">
+          </div>
+          <div class="col-lg-8 py-lg-5 pb-2">
+<h2>¿Quién es Mónica?</h2>
+<p>Hace más de 30 años que Mónica vive en nuestro municipio ch, y
+atiende su comercio en Simón Bolívar y Silvestre Blanco. Desde allí
+escucha, acompaña y construye redes con el barrio.</p>
+<p>Frenteamplista de toda la vida, comenzó su militancia en la lucha por
+la restauración democrática.</p>
+<p>Hoy, se propone seguir trabajando por todos y todas quienes
+habitamos este territorio desde el concejo municipal.
+
+<h2>Un municipio ch por el Buen Vivir</h2>
+
+<p>Pensar en un Municipio ch por el <b>Buen Vivir</b>, desde el proyecto del
+Frente Amplio, implica el concepto de bienestar en una sociedad que
+ampara, que asegura derechos, calidad de vida y dignidad a todas y
+todos sus habitantes sobre la base de la solidaridad como valor básico
+e indisoluble de dicho bienestar.</p>
+<p>
+La principal tarea como gobierno municipal será asegurar los servicios
+de su competencia contribuyendo a lograr un hábitat más limpio y
+cuidado para el disfrute, elaborando planes en diferentes áreas con el
+aporte de los Concejos Vecinales, generando una verdadera
+participación ciudadana, e incorporando la igualdad de derechos y
+oportunidades para todos y todas como gran diferencial con el
+proyecto de la derecha. Al mismo tiempo, jugar un insustituible rol
+articulador entre las necesidades de la población y organizaciones en
+los barrios y los gobiernos Departamental y Nacional.</p>
+<p>Es en este sentido que para #Monialch y su equipo <b>la limpieza de las
+calles, la recolección de residuos, las personas en situación de
+calle, el cuidado de los espacios públicos saludables, las veredas, el
+deporte, la seguridad, la convivencia y la cultura</b> estarán en el
+primer lugar de sus preocupaciones.</p>
+<p>Hoy el Frente Amplio ha vuelto al gobierno nacional y sin duda
+renovará el gobierno departamental en Montevideo, por eso con
+Mónica Caffa alcaldesa decimos <b>“Ahora el ch”</b>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- sobre mi -->
+
+    <!-- Municipio CH -->
+    <section class="bg-gris" id="municipioch">
+      <div class="container">
+	<h2>Municipio CH</h2>
+        <div class="row">
+          <div class="col-lg-4 my-1">
+            <img src="imagenes/MunicipioCH.png" class="img-fluid" alt="Mónica Caffa">
+          </div>
+          <div class="col-lg-8 py-lg-5 pb-2">
+            <h2>Límites:</h2>
+              <p>Bv. Gral. Artigas, costa del Río de la Plata, Bv. José Batlle y Ordóñez, Av. Italia, Av. Luis Alberto de Herrera, Monte Caseros, Bv. Gral. Artigas.</p>
+            <h2>Series de credenciales que votan en el CH:</h2>
+              <p><b class="fs-5">ATB - AUA - AUB - AXA - AXB<br/>AZA - AZB - BAA - BAB</b></p>
+            <h2>Cometidos principales:</h2>
+              <ul>
+                <li><b>Fiscalización y multas</b>: Control y sanción por incumplimiento de normativas.
+                <li><b>Gestión del arbolado</b>: Poda y mantenimiento, excluyendo predios privados y avenidas.
+                <li><b>Alumbrado público</b>: Reparación y mantenimiento en calles barriales.
+                <li><b>Limpieza urbana</b>: Barrido de calles, plazas y espacios comunitarios.
+                <li><b>Mejoras viales</b>: Mantenimiento y asfaltado de calles barriales.
+                <li><b>Plazas y espacios públicos</b>: Mantenimiento de áreas verdes, remodelación y conservación de plazas.
+              </ul>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Municipio CH -->
+
+    <!-- agenda -->
+    <section class="bg-azul text-center" id="agenda">
+      <div class="container plataforma">
+        <h2>Agenda</h2>
+
+        <div class="container bg-blanco py-5">
+          <div class="d-grid pb-5 gap-3 bg-blanco">
+            <div id="agenda-container"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- agenda -->
+
+    <!-- plataforma -->
+    <section class="text-center">
+      <div class="container plataforma">
+        <h2>Plataforma municipal</h2>
+	<p>PLATAFORMA ELECTORAL 2025-2030 FRENTE AMPLIO MUNICIPIO CH</p>
+	<p class="fw-bold">"Por el buen vivir"</p>
+        <a href="plataforma municipal CH.html" class="btn btn-info azul" alt="PLATAFORMA ELECTORAL 2025-2030 FRENTE AMPLIO MUNICIPIO CH">
+          Ver <i class="fa-solid fa-link"></i>
+        </a>
+        <a href="/documentos/PLATAFORMA MUNICIPAL CH 2020-2025 FA.pdf" target="_blank" class="btn btn-light azul" alt="PLATAFORMA ELECTORAL 2025-2030 FRENTE AMPLIO MUNICIPIO CH">
+          Descargar <i class="fa-solid fa-download"></i>
+        </a>
+      </div>
+      <div class="container mt-5">
+          <div class="row mt-5 justify-content-around gy-2">
+
+            <div class="col-12 col-xl-20">
+              <div class="card h-100">
+                <a href="plataforma%20municipal%20CH.html#participaci%C3%B3n" class="btn btn-light h-100">
+                  <div class="card-body">
+                    <div class="display-6 w-100 azul">
+                      <i class="fa-solid fa-users"></i>
+                    </div>
+                    <p class="fs-4 fs-xl-5 fs-xxl-4">Municipio de la participación</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-12 col-xl-20">
+              <div class="card h-100">
+                <a href="plataforma%20municipal%20CH.html#derechos" class="btn btn-light h-100">
+                <div class="card-body">
+                  <div class="display-6 w-100 azul">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                  </div>
+                  <p class="fs-4 fs-xl-5 fs-xxl-4">Municipio de los derechos</p>
+                </div>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-12 col-xl-20">
+              <div class="card h-100">
+                <a href="plataforma%20municipal%20CH.html#ambiente" class="btn btn-light h-100">
+                <div class="card-body">
+                  <div class="display-6 w-100 azul">
+                    <i class="fa-solid fa-leaf"></i>
+                  </div>
+                  <p class="fs-4 fs-xl-5 fs-xxl-4">Municipio amigable con el ambiente y el desarrollo sostenible</p>
+                </div>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-12 col-xl-20">
+              <div class="card h-100">
+                <a href="plataforma%20municipal%20CH.html#cultura" class="btn btn-light h-100">
+                <div class="card-body">
+                  <div class="display-6 w-100 azul">
+                    <i class="fa-solid fa-masks-theater"></i>
+                  </div>
+                  <p class="fs-4 fs-xl-5 fs-xxl-4">Municipio de la cultura, las artes y el patrimonio</p>
+                </div>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-12 col-xl-20">
+              <div class="card h-100">
+                <a href="plataforma%20municipal%20CH.html#innovaci%C3%B3n" class="btn btn-light h-100">
+                <div class="card-body">
+                  <div class="display-6 w-100 azul">
+                    <i class="fa-solid fa-rocket"></i>
+                  </div>
+                  <p class="fs-4 fs-xl-5 fs-xxl-4">Municipio de la innovación y el futuro</p>
+                </div>
+                </a>
+              </div>
+            </div>
+
+          </div>
+      </div>
+
+    </section>
+    <!-- plataforma -->
+
+    <!-- footer -->
+    <footer class="navbar bg-dark py-3">
+      <div class="container">
+        <a class='navbar-brand' href='/'>
+          <img src="imagenes/logoch.png" alt="Logo CH" class="img-fluid logoch">
+        </a>
+        <div class="display-6 blanco">
+          <a href="https://wa.me/59899899307" aria-label="whatsapp" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="https://www.instagram.com/monicaffach" aria-label="instagram" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.facebook.com/profile.php?id=61573116275359" aria-label="facebook" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://x.com/monicaffach" aria-label="x" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="https://www.tiktok.com/@monicaffach" aria-label="tiktok" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+	  <a href="mailto:monicaffach@gmail.com" aria-label="e-mail" target="_blank"><i class="fa-regular fa-envelope"></i></a>
+        </div>
+      </div>
+    </footer>
+    <!-- footer -->
+
+  </body>
+<script>
+<!-- popup -->
+
+        function showVideo() {
+            document.getElementById("playOverlay").style.display = "none"; // Hide play button
+            document.getElementById("videoContainer").style.display = "flex"; // Show video popup
+            document.getElementById("videoPlayer").play().catch(()=>{}); // Autoplay video
+        }
+
+        function closeVideo() {
+            document.getElementById("videoContainer").style.display = "none"; // Hide video popup
+            document.getElementById("playOverlay").style.display = "flex"; // Show play button
+            document.getElementById("videoPlayer").pause(); // Pause video
+            document.getElementById("videoPlayer").currentTime = 0; // Reset video
+        }
+
+        // Auto-close when video ends
+        document.getElementById("videoPlayer").addEventListener("ended", closeVideo);
+
+	function showPlay() {
+            document.getElementById("playOverlay").style.display = "flex"; // Show play button
+	}
+<!-- popup -->
+</script>
+</html>
